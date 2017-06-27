@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- local -->
+<configuration
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://www.padual.com/java/logback.xsd">
+	
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%.-1level|%-50.50logger|%5L|%d{HH:mm:ss}|%X{PtxId},%20X{PspanId}|%msg%n%ex{full, EX_DISPLAY_EVAL}</pattern>
+		</encoder>
+	</appender>
+	<logger name="org.apache" level="INFO" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	<logger name="org.apache.http.wire" level="INFO" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger name="org.apache.ibatis" level="INFO" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger name="org.hibernate" level="INFO" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	
+	<!--  <logger name="org.hibernate.type" level="TRACE" additivity="false">
+		<appender-ref ref="console" />
+	</logger>-->
+	
+	<logger name="org.hibernate.SQL" level="INFO" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger name="org.hibernate.tool.hbm2ddl.TableMetadata" level="WARN" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger name="org.springframework" level="DEBUG" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	
+	<logger name="org.springframework.security" level="INFO" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	<logger name="org.springframework.web.servlet.DispatcherServlet" level="INFO" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" level="WARN" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	
+	<root level="DEBUG">
+		<appender-ref ref="console" />
+	</root>
+	
+</configuration>

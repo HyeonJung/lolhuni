@@ -1,0 +1,67 @@
+package com.hj.lolhuni.service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.hj.lolhuni.model.CurrentGameInfo;
+import com.hj.lolhuni.model.Summoner;
+import com.hj.lolhuni.util.HttpConnectionUtil;
+import com.hj.lolhuni.util.JsonConvertUtil;
+
+@Service
+public class LoLServiceImpl implements LoLService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LoLServiceImpl.class); 
+	
+	@Value("${baseUrl}")
+	String baseUrl;
+	
+	@Value("${apiKey}")
+	String apiKey;
+	
+	/**
+	 * 소환사 정보 
+	 */
+	@Override
+	public Summoner getSummonerInfo(String summonerName) {
+		Summoner summoner = null;
+		String url = baseUrl + "/lol/summoner/v3/summoners/by-name/" + summonerName + "?api_key=" + apiKey;
+		try {
+			String result = HttpConnectionUtil.connectGetJson(url);
+			logger.debug("### result = {}",result);
+			summoner = (Summoner) JsonConvertUtil.jsonConvertToObject(result, Summoner.class);
+		} catch (Exception e) {
+			logger.error("### error",e);
+		}
+		
+		return summoner;
+	}
+	
+	
+	/**
+	 * 게임 정보
+	 */
+	@Override
+	public CurrentGameInfo getGameInfo(long summonerId) {
+		CurrentGameInfo gameInfo = null;
+		String url = baseUrl + "/observer-mode/rest/consumer/getSpectatorGameInfo/KR/" + summonerId + "?api_key=" + apiKey;
+		
+		try {
+			String result = HttpConnectionUtil.connectGetJson(url);
+			
+			if (result != null && result.length() > 0) {
+				gameInfo = (CurrentGameInfo) JsonConvertUtil.jsonConvertToObject(result, CurrentGameInfo.class);
+			}
+			logger.debug("### result = {}",result);
+		} catch (Exception e) {
+			logger.error("### error",e);
+		}
+		
+		return gameInfo;
+	}
+	
+
+	
+}
