@@ -75,4 +75,37 @@ public class HttpConnectionUtil {
 		
 		return ret;
 	}
+	
+	/**
+	 * http get for json type for CurrentGameInfo
+	 */
+	public static String connectGetJsonForCurrentGameInfo(String url) {
+		
+		String ret = "";
+		
+		try {
+			URL connectUrl = new URL(url);
+			
+			HttpURLConnection conn = (HttpURLConnection) connectUrl.openConnection();
+			
+			conn.setRequestMethod("GET");
+			
+			BufferedReader in = new BufferedReader(
+			        new InputStreamReader(conn.getInputStream()));
+			String inputLine;
+			StringBuffer response = new StringBuffer();
+
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			ret = response.toString();
+			
+		} catch (Exception e) {
+		}
+		
+		
+		return ret;
+	}
 }

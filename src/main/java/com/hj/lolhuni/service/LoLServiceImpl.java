@@ -1,5 +1,7 @@
 package com.hj.lolhuni.service;
 
+import java.io.FileNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +33,11 @@ public class LoLServiceImpl implements LoLService {
 		try {
 			String result = HttpConnectionUtil.connectGetJson(url);
 			logger.debug("### result = {}",result);
-			summoner = (Summoner) JsonConvertUtil.jsonConvertToObject(result, Summoner.class);
+			
+			if (result != null && result.length() > 0) {
+				summoner = (Summoner) JsonConvertUtil.jsonConvertToObject(result, Summoner.class);
+			}
+			
 		} catch (Exception e) {
 			logger.error("### error",e);
 		}
@@ -49,14 +55,14 @@ public class LoLServiceImpl implements LoLService {
 		String url = baseUrl + "/observer-mode/rest/consumer/getSpectatorGameInfo/KR/" + summonerId + "?api_key=" + apiKey;
 		
 		try {
-			String result = HttpConnectionUtil.connectGetJson(url);
+			String result = HttpConnectionUtil.connectGetJsonForCurrentGameInfo(url);
 			
 			if (result != null && result.length() > 0) {
 				gameInfo = (CurrentGameInfo) JsonConvertUtil.jsonConvertToObject(result, CurrentGameInfo.class);
 			}
 			logger.debug("### result = {}",result);
 		} catch (Exception e) {
-			logger.error("### error",e);
+			logger.debug("### 게임 중이 아닙니다.");
 		}
 		
 		return gameInfo;
