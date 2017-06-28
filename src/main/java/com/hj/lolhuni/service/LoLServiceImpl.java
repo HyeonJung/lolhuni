@@ -59,8 +59,9 @@ public class LoLServiceImpl implements LoLService {
 			
 			if (result != null && result.length() > 0) {
 				gameInfo = (CurrentGameInfo) JsonConvertUtil.jsonConvertToObject(result, CurrentGameInfo.class);
+				logger.debug("### result = {}",result);
 			}
-			logger.debug("### result = {}",result);
+			
 		} catch (Exception e) {
 			logger.debug("### 게임 중이 아닙니다.");
 		}

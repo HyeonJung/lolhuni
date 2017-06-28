@@ -28,6 +28,6 @@ public class WebController {
 	
 	@Bean
 	public TaskScheduler taskScheduler() {
-	    return new ConcurrentTaskScheduler(); //single threaded by default
+	    return new ConcurrentTaskScheduler();
 	}
 }
