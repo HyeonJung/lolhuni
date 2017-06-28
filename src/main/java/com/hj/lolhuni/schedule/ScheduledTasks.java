@@ -19,9 +19,9 @@ public class ScheduledTasks {
 	 LoLService lolService;
 	 
 	 /**
-	  * 5초마다 실행
+	  * 5분마다 게임 체크
 	  */
-	 @Scheduled(fixedRate = 5000)
+	 @Scheduled(fixedRate = 300000)
 	 public void checkCurrentGame() {
 		 Summoner summoner = lolService.getSummonerInfo("고릴라피시방");
 		 CurrentGameInfo gameInfo = null;

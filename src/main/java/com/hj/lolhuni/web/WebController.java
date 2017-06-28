@@ -1,6 +1,9 @@
 package com.hj.lolhuni.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,5 +24,10 @@ public class WebController {
 	public CurrentGameInfo test() {
 		Summoner summoner = lolService.getSummonerInfo("고릴라피시방");
 		return lolService.getGameInfo(summoner.getId());
+	}
+	
+	@Bean
+	public TaskScheduler taskScheduler() {
+	    return new ConcurrentTaskScheduler(); //single threaded by default
 	}
 }

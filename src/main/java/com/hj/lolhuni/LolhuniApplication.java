@@ -13,15 +13,5 @@ public class LolhuniApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LolhuniApplication.class, args);
 	}
-	
-	@Bean
-	public ScheduledExecutorFactoryBean scheduledExecutorService() {
-		
-		ScheduledExecutorFactoryBean bean = new ScheduledExecutorFactoryBean();
-		bean.setPoolSize(5);
-		
-		return bean;
-		
-	}
 
 }
