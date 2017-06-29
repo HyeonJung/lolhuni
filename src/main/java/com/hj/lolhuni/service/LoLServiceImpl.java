@@ -1,7 +1,5 @@
 package com.hj.lolhuni.service;
 
-import java.io.FileNotFoundException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,8 +18,8 @@ public class LoLServiceImpl implements LoLService {
 	@Value("${baseUrl}")
 	String baseUrl;
 	
-	@Value("${apiKey}")
-	String apiKey;
+	@Value("${lolApiKey}")
+	String lolApiKey;
 	
 	/**
 	 * 소환사 정보 
@@ -29,7 +27,7 @@ public class LoLServiceImpl implements LoLService {
 	@Override
 	public Summoner getSummonerInfo(String summonerName) {
 		Summoner summoner = null;
-		String url = baseUrl + "/lol/summoner/v3/summoners/by-name/" + summonerName + "?api_key=" + apiKey;
+		String url = baseUrl + "/lol/summoner/v3/summoners/by-name/" + summonerName + "?api_key=" + lolApiKey;
 		try {
 			String result = HttpConnectionUtil.connectGetJson(url);
 			logger.debug("### result = {}",result);
@@ -52,7 +50,7 @@ public class LoLServiceImpl implements LoLService {
 	@Override
 	public CurrentGameInfo getGameInfo(long summonerId) {
 		CurrentGameInfo gameInfo = null;
-		String url = baseUrl + "/observer-mode/rest/consumer/getSpectatorGameInfo/KR/" + summonerId + "?api_key=" + apiKey;
+		String url = baseUrl + "/observer-mode/rest/consumer/getSpectatorGameInfo/KR/" + summonerId + "?api_key=" + lolApiKey;
 		
 		try {
 			String result = HttpConnectionUtil.connectGetJsonForCurrentGameInfo(url);
