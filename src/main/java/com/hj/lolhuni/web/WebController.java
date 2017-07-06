@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hj.lolhuni.model.CurrentGameInfo;
-import com.hj.lolhuni.model.Summoner;
+import com.hj.lolhuni.model.lol.CurrentGameInfo;
+import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.service.LoLService;
 
 @Controller

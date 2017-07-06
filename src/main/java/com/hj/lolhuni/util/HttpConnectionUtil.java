@@ -5,8 +5,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.hj.lolhuni.model.fb.Recipient;
 
 public class HttpConnectionUtil {
 	
@@ -103,6 +111,37 @@ public class HttpConnectionUtil {
 			ret = response.toString();
 			
 		} catch (Exception e) {
+		}
+		
+		
+		return ret;
+	}
+	
+	/**
+	 * 페이스북 메신저로 메시지 보내기
+	 * @param url
+	 * @param phoneNumber
+	 * @param text
+	 * @return
+	 */
+	public static String connectPostJsonForFbMessageSend(String url, String phoneNumber, String text) {
+		
+		String ret = "";
+		
+		try {			
+			StringEntity params = new StringEntity("{ \"recipient\":{\"phone_number\":\"" + phoneNumber + "\"},\"message\":{\"text\":\"" + text +"\"}}", "UTF-8" );
+			
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpPost post = new HttpPost(url);
+			post.setHeader("Content-Type", "application/json");
+			post.setEntity(params);
+			HttpResponse response = client.execute(post);
+			
+			logger.debug("### response = {}",response);
+		} catch (Exception e) {
+			logger.error("### error",e);
+		} finally {
+			
 		}
 		
 		

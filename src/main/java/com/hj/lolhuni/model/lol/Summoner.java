@@ -1,4 +1,4 @@
-package com.hj.lolhuni.model;
+package com.hj.lolhuni.model.lol;
 
 import java.util.Date;
 

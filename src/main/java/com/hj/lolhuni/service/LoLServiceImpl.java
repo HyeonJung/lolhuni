@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.hj.lolhuni.model.CurrentGameInfo;
-import com.hj.lolhuni.model.Summoner;
+import com.hj.lolhuni.model.lol.CurrentGameInfo;
+import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.util.HttpConnectionUtil;
 import com.hj.lolhuni.util.JsonConvertUtil;
 
@@ -20,6 +20,12 @@ public class LoLServiceImpl implements LoLService {
 	
 	@Value("${lolApiKey}")
 	String lolApiKey;
+	
+	@Value("${fbUrl}")
+	String fbUrl;
+	
+	@Value("${fbAccessToken}")
+	String fbAccessToken;
 	
 	/**
 	 * 소환사 정보 
@@ -67,6 +73,16 @@ public class LoLServiceImpl implements LoLService {
 		return gameInfo;
 	}
 	
+	/**
+	 * 메시지 보내기
+	 */
+	@Override
+	public void sendFbMessage(String result, String phoneNumber) {
+		
+		String url = fbUrl + "me/messages?access_token=" + fbAccessToken;
+		logger.debug("### url = {}",url);
+		HttpConnectionUtil.connectPostJsonForFbMessageSend(url, phoneNumber, result);
+	}
 
 	
 }
