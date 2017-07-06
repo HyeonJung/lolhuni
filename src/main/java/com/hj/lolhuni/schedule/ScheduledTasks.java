@@ -38,6 +38,7 @@ public class ScheduledTasks {
 			 
 			 if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 300) {
 				 lolService.sendFbMessage("고릴라피시방님은 현재 게임 중입니다.", "+82(010)2517-1592");
+				 lolService.sendFbMessage("와 유동훈 혼자 겜 쳐하네;;", "+82(010)3631-7381");
 			 }
 		 }
 	 }
