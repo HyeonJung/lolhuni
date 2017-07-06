@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://www.padual.com/java/logback.xsd">
+    
+    <property name="logfile_path" value="logs" />
+    <property name="logfile_name" value="image-hosting" />
+    
+    <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logfile_path}/${logfile_name}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logfile_path}/${logfile_name}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%.-1level|%-40.40logger|%5L|%d{HH:mm:ss}|%msg%n%ex{full, EX_DISPLAY_EVAL}</pattern>
+        </encoder>
+    </appender>
+    
+    <root level="DEBUG">
+        <appender-ref ref="logfile" />
+    </root>
+</configuration>

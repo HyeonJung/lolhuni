@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.hj.lolhuni.model.lol.CurrentGameInfo;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.service.LoLService;
-import com.hj.lolhuni.util.HttpConnectionUtil;
 
 @Component
 public class ScheduledTasks {
@@ -38,7 +37,7 @@ public class ScheduledTasks {
 			 logger.debug("### {}님은 현재 게임 중입니다.",summoner.getName());
 			 
 			 if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 300) {
-				 lolService.sendFbMessage("고릴라피시방님은 현재 게임 중입니다..", "+82(010)2517-1592");
+				 lolService.sendFbMessage("고릴라피시방님은 현재 게임 중입니다.", "+82(010)2517-1592");
 			 }
 		 }
 	 }
