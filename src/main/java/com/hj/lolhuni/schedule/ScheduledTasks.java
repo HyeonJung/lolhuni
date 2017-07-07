@@ -21,7 +21,7 @@ public class ScheduledTasks {
 	 /**
 	  * 5분마다 게임 체크
 	  */
-	 @Scheduled(fixedRate = 300000)
+	 @Scheduled(fixedRate = 60000)
 	 public void checkCurrentGame() {
 		 Summoner summoner = lolService.getSummonerInfo("고릴라피시방");
 		 CurrentGameInfo gameInfo = null;
@@ -36,7 +36,7 @@ public class ScheduledTasks {
 		 } else {
 			 logger.debug("### {}님은 현재 게임 중입니다.",summoner.getName());
 			 
-			 if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 300) {
+			 if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 60) {
 				 lolService.sendFbMessage("고릴라피시방님은 현재 게임 중입니다.", "+82(010)2517-1592");
 				 lolService.sendFbMessage("고릴라피시방님은 현재 게임 중입니다.", "+82(010)4140-8702");
 				 lolService.sendFbMessage("와 유동훈 혼자 겜 쳐하네;;", "+82(010)3632-7381");
