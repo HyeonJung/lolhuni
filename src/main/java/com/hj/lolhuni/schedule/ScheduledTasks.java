@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.hj.lolhuni.model.data.ChampionInfo;
 import com.hj.lolhuni.model.data.CheckList;
 import com.hj.lolhuni.model.data.PhoneNumList;
 import com.hj.lolhuni.model.lol.CurrentGameInfo;
+import com.hj.lolhuni.model.lol.CurrentGameParticipant;
 import com.hj.lolhuni.service.LoLService;
 
 @Component
@@ -61,6 +63,15 @@ public class ScheduledTasks {
 				 logger.debug("### {}님은 현재 게임 중입니다.",list.name());
 				 
 				 if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 60) {
+					 
+					 String championName = "";
+					 
+					 for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
+						 if (participant.getSummonerId() == list.getId()) {
+							 String champId = "champ" + list.getId();
+							 ChampionInfo championInfo = new ChampionInfo(champId);
+						 }
+					 }
 					 
 					 for (PhoneNumList numList : PhoneNumList.values()) {
 						 
