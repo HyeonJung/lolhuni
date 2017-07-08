@@ -26,6 +26,11 @@ info:
 
 spring:
   profiles: production
+  datasource:
+    driverClassName: org.maria.jdbc.Driver
+    url: jdbc:maria://13.124.165.240:3306/lolhuni
+    username: lolhuni
+    password: allmeat12#$ 
  
 logging:
   config: classpath:logback-production.xml
