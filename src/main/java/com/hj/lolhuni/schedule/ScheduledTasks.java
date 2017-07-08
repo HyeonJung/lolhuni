@@ -53,8 +53,8 @@ public class ScheduledTasks {
 	 @Scheduled(fixedRate = 300000)
 	 public void checkCurrentGameMinute() {
 		
-		 CurrentGameInfo gameInfo = null;
-		 
+		CurrentGameInfo gameInfo = null;
+		
 		for (CheckList list : CheckList.values()) {
 			 gameInfo = lolService.getGameInfo(list.getId());
 			 if (gameInfo == null) {
