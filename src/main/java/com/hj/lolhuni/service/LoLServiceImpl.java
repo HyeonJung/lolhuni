@@ -2,6 +2,7 @@ package com.hj.lolhuni.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,25 +19,26 @@ public class LoLServiceImpl implements LoLService {
 	@Value("${baseUrl}")
 	String baseUrl;
 	
-	@Value("${lolApiKey}")
-	String lolApiKey;
-	
 	@Value("${fbUrl}")
 	String fbUrl;
 	
 	@Value("${fbAccessToken}")
 	String fbAccessToken;
 	
+	@Autowired
+	ApiKeyService apiKeyService;
 	/**
 	 * 소환사 정보 
 	 */
 	@Override
 	public Summoner getSummonerInfo(String summonerName) {
+		
+		String lolApiKey = apiKeyService.getApiKeyByKeyName("lol").getKeyValue();
+		
 		Summoner summoner = null;
 		String url = baseUrl + "/lol/summoner/v3/summoners/by-name/" + summonerName + "?api_key=" + lolApiKey;
 		try {
 			String result = HttpConnectionUtil.connectGetJson(url);
-			logger.debug("### result = {}",result);
 			
 			if (result != null && result.length() > 0) {
 				summoner = (Summoner) JsonConvertUtil.jsonConvertToObject(result, Summoner.class);
@@ -55,6 +57,7 @@ public class LoLServiceImpl implements LoLService {
 	 */
 	@Override
 	public CurrentGameInfo getGameInfo(long summonerId) {
+		String lolApiKey = apiKeyService.getApiKeyByKeyName("lol").getKeyValue();
 		CurrentGameInfo gameInfo = null;
 		String url = baseUrl + "/observer-mode/rest/consumer/getSpectatorGameInfo/KR/" + summonerId + "?api_key=" + lolApiKey;
 		
@@ -63,7 +66,6 @@ public class LoLServiceImpl implements LoLService {
 			
 			if (result != null && result.length() > 0) {
 				gameInfo = (CurrentGameInfo) JsonConvertUtil.jsonConvertToObject(result, CurrentGameInfo.class);
-				logger.debug("### result = {}",result);
 			}
 			
 		} catch (Exception e) {
