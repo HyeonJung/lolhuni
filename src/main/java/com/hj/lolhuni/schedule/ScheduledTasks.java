@@ -48,9 +48,9 @@ public class ScheduledTasks {
 //	 }
 	 
 	 /**
-	  * 1분마다 게임 체크
+	  * 5분마다 게임 체크
 	  */
-	 @Scheduled(fixedRate = 60000)
+	 @Scheduled(fixedRate = 300000)
 	 public void checkCurrentGameMinute() {
 		
 		 CurrentGameInfo gameInfo = null;
@@ -60,23 +60,24 @@ public class ScheduledTasks {
 			 if (gameInfo == null) {
 				 logger.debug("### {}님은 현재 게임 중이 아닙니다.", list.name());
 			 } else {
-				 logger.debug("### {}님은 현재 게임 중입니다.",list.name());
+				
 				 
-				 if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 60) {
+				 if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 300) {
 					 
 					 String championName = "";
 					 
 					 for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
 						 if (participant.getSummonerId() == list.getId()) {
 							 String champId = "champ" + list.getId();
-							 ChampionInfo championInfo = new ChampionInfo(champId);
+							 ChampionInfo championInfo = ChampionInfo.valueOf(champId);
+							 championName = championInfo.getChampionName();
 						 }
 					 }
-					 
+					 logger.debug("### {}님은 현재 {}(으)로 게임 중입니다.",list.name(),championName);
 					 for (PhoneNumList numList : PhoneNumList.values()) {
 						 
 						 if (!(numList.name().equals(list.name()))) {
-							 lolService.sendFbMessage(list.name() + "님은 현재 게임 중입니다.", numList.getTel());
+							 lolService.sendFbMessage(list.name() + "님은 현재 " + championName + "(으)로 게임 중입니다.", numList.getTel());
 						 }
 					 }
 				 }
