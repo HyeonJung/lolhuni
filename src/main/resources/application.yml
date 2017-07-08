@@ -28,9 +28,14 @@ spring:
   profiles: production
   datasource:
     driverClassName: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://13.124.165.240:3306/lolhuni
+    url: jdbc:mariadb://13.124.165.240:3306/lolhuni?autoReconnect=true
     username: lolhuni
-    password: allmeat12#$ 
- 
+    password: allmeat12#$
+    tomcat:
+     initial-size: 10
+     max-active: 20
+     min-idle: 10
+     max-idle: 10
+     max-wait: 3000
 logging:
   config: classpath:logback-production.xml
