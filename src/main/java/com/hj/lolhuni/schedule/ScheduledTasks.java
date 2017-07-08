@@ -61,19 +61,19 @@ public class ScheduledTasks {
 				 logger.debug("### {}님은 현재 게임 중이 아닙니다.", list.name());
 			 } else {
 				
+				 String championName = "";
+				 
+				 for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
+					 if (participant.getSummonerId() == list.getId()) {
+						 String champId = "champ" + participant.getChampionId();
+						 logger.debug("### champId = {}",champId);
+						 ChampionInfo championInfo = ChampionInfo.valueOf(champId);
+						 championName = championInfo.getChampionName();
+					 }
+				 }
+				 logger.debug("### {}님은 현재 {}(으)로 게임 중입니다.",list.name(),championName);
 				 
 				 if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 300) {
-					 
-					 String championName = "";
-					 
-					 for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
-						 if (participant.getSummonerId() == list.getId()) {
-							 String champId = "champ" + list.getId();
-							 ChampionInfo championInfo = ChampionInfo.valueOf(champId);
-							 championName = championInfo.getChampionName();
-						 }
-					 }
-					 logger.debug("### {}님은 현재 {}(으)로 게임 중입니다.",list.name(),championName);
 					 for (PhoneNumList numList : PhoneNumList.values()) {
 						 
 						 if (!(numList.name().equals(list.name()))) {
