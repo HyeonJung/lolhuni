@@ -1,10 +1,7 @@
-# lolhuni
+# lolhuni(유동훈 롤 추적기)
 
-![](./assets/1.jpg)
 
-## 개요
-
-![](./assets/6.jpg)
+![](./assets/example.PNG)
 
 ## 시작하기
 
