@@ -4,9 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.TableGenerator;
 
 import com.hj.lolhuni.model.data.Notification;
 import com.hj.lolhuni.model.lol.Summoner;
@@ -15,6 +18,10 @@ import com.hj.lolhuni.model.lol.Summoner;
 public class Game {
 	
 	@Id
+	@TableGenerator(name = "GEN_GAME_NO", allocationSize = 1)
+	@GeneratedValue(generator = "GEN_GAME_NO", strategy = GenerationType.TABLE)
+	private long gameNo;
+	
 	@Column
 	private long gameId;
 	
