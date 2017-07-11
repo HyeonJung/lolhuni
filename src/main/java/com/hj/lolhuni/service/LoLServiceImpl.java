@@ -38,7 +38,7 @@ public class LoLServiceImpl implements LoLService {
 		String lolApiKey = apiKeyService.getApiKeyByKeyName("lol").getKeyValue();
 		
 		Summoner summoner = null;
-		String url = baseUrl + "/lol/summoner/v3/summoners/by-name/" + summonerName + "?api_key=" + lolApiKey;
+		String url = baseUrl + "lol/summoner/v3/summoners/by-name/" + summonerName + "?api_key=" + lolApiKey;
 		try {
 			String result = HttpConnectionUtil.connectGetJson(url);
 			
@@ -61,7 +61,7 @@ public class LoLServiceImpl implements LoLService {
 	public CurrentGameInfo getGameInfo(long summonerId) {
 		String lolApiKey = apiKeyService.getApiKeyByKeyName("lol").getKeyValue();
 		CurrentGameInfo gameInfo = null;
-		String url = baseUrl + "/observer-mode/rest/consumer/getSpectatorGameInfo/KR/" + summonerId + "?api_key=" + lolApiKey;
+		String url = baseUrl + "observer-mode/rest/consumer/getSpectatorGameInfo/KR/" + summonerId + "?api_key=" + lolApiKey;
 		
 		try {
 			String result = HttpConnectionUtil.connectGetJsonForLoL(url);

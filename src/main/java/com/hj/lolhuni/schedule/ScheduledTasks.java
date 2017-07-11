@@ -61,7 +61,7 @@ public class ScheduledTasks {
 			List<Target> targets = targetService.getTargetsBySummonerId(summoner.getId());
 			
 			if (targets == null || targets.size() < 1) {
-				return;
+				continue;
 			}
 			
 			gameInfo = lolService.getGameInfo(summoner.getId());
