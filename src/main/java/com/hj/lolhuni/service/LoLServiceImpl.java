@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hj.lolhuni.model.lol.CurrentGameInfo;
+import com.hj.lolhuni.model.lol.RawStatsDto;
 import com.hj.lolhuni.model.lol.RecentGamesDto;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.util.HttpConnectionUtil;
@@ -109,6 +110,23 @@ public class LoLServiceImpl implements LoLService {
 		}
 		
 		return recentGame;
+	}
+	
+	/**
+	 * stats
+	 */
+	@Override
+	public void getGameStats(RawStatsDto stats) {
+		int kill = stats.getChampionsKilled();
+		int death = stats.getNumDeaths();
+		int assists = stats.getAssists();
+		boolean perfect = true;
+		double calDeath = death;
+		if (calDeath < 1) {
+			calDeath = 1;
+			perfect = false;
+		}
+		double average = (double) kill + (double) assists / calDeath;
 	}
 
 	

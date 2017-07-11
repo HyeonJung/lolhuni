@@ -124,6 +124,8 @@ public class ScheduledTasks {
 					
 					gameService.saveGame(gameInfo.getGameId(),summoner);
 					
+				} else {
+					logger.debug("### {}님은 현재 게임 중입니다.",summoner.getName());
 				}
 			}
 		}
