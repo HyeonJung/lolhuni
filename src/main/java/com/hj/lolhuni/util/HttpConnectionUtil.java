@@ -128,7 +128,7 @@ public class HttpConnectionUtil {
 	 * @return
 	 */
 	public static String connectPostJsonForFbMessageSend(String url, String phoneNumber, String text) {
-		
+		logger.debug("### url = {}, phoneNumber = {}, text = {}",url,phoneNumber,text);
 		String ret = "";
 		
 		try {			

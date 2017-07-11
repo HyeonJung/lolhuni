@@ -79,12 +79,13 @@ public class ScheduledTasks {
 								for (Target target : targets) {
 									User user = userService.getUser(target.getUserNo());
 									String win = gameDto.getStats().isWin() ? "승리" : "패배";
-									String message = summoner.getName() + "님이 " + win + "하셨습니다.\n";
+									String message = summoner.getName() + "님이 " + win + "하셨습니다. ";
 									message += "킬 : " + gameDto.getStats().getChampionsKilled()
-											+ "\n데스 : " + gameDto.getStats().getNumDeaths()
-											+ "\n어시스트 : " + gameDto.getStats().getAssists();
+											+ " 데스 : " + gameDto.getStats().getNumDeaths()
+											+ " 어시스트 : " + gameDto.getStats().getAssists();
  									
 									if (user != null) {
+										
 										lolService.sendFbMessage(message, user.getTel());
 										send = true;
 									}
@@ -95,9 +96,7 @@ public class ScheduledTasks {
 							game.setResultNotification(Notification.PUSH);
 							gameService.saveGame(game);
 						}
-					}
-					
-					
+					}		
 				}
 				
 			} else {

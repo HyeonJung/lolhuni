@@ -1,5 +1,7 @@
 package com.hj.lolhuni.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -36,12 +38,9 @@ public class Game {
 	@Enumerated(EnumType.STRING)
 	@Column
 	private Notification resultNotification;
-
-	@Override
-	public String toString() {
-		return "Game [gameId=" + gameId + ", summoner=" + summoner + ", playNotification=" + playNotification
-				+ ", resultNotification=" + resultNotification + "]";
-	}
+	
+	@Column
+	private Date regDate;
 
 	public long getGameId() {
 		return gameId;
@@ -74,5 +73,29 @@ public class Game {
 	public void setResultNotification(Notification resultNotification) {
 		this.resultNotification = resultNotification;
 	}
+
+	public long getGameNo() {
+		return gameNo;
+	}
+
+	public void setGameNo(long gameNo) {
+		this.gameNo = gameNo;
+	}
+
+	public Date getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(Date regDate) {
+		this.regDate = regDate;
+	}
+
+	@Override
+	public String toString() {
+		return "Game [gameNo=" + gameNo + ", gameId=" + gameId + ", summoner=" + summoner + ", playNotification="
+				+ playNotification + ", resultNotification=" + resultNotification + ", regDate=" + regDate + "]";
+	}
+	
+	
 	
 }

@@ -1,5 +1,6 @@
 package com.hj.lolhuni.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class GameServiceImpl implements GameService {
 		game.setPlayNotification(Notification.PUSH);
 		game.setSummoner(summoner);
 		game.setResultNotification(Notification.PEND);
+		game.setRegDate(new Date());
 		
 		game = gameRepository.save(game);
 		return game;
