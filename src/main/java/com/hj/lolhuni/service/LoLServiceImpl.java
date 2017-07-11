@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.hj.lolhuni.model.lol.CurrentGameInfo;
+import com.hj.lolhuni.model.lol.RecentGamesDto;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.util.HttpConnectionUtil;
 import com.hj.lolhuni.util.JsonConvertUtil;
@@ -27,6 +28,7 @@ public class LoLServiceImpl implements LoLService {
 	
 	@Autowired
 	ApiKeyService apiKeyService;
+	
 	/**
 	 * 소환사 정보 
 	 */
@@ -62,7 +64,7 @@ public class LoLServiceImpl implements LoLService {
 		String url = baseUrl + "/observer-mode/rest/consumer/getSpectatorGameInfo/KR/" + summonerId + "?api_key=" + lolApiKey;
 		
 		try {
-			String result = HttpConnectionUtil.connectGetJsonForCurrentGameInfo(url);
+			String result = HttpConnectionUtil.connectGetJsonForLoL(url);
 			
 			if (result != null && result.length() > 0) {
 				gameInfo = (CurrentGameInfo) JsonConvertUtil.jsonConvertToObject(result, CurrentGameInfo.class);
@@ -84,6 +86,29 @@ public class LoLServiceImpl implements LoLService {
 		String url = fbUrl + "me/messages?access_token=" + fbAccessToken;
 		logger.debug("### url = {}",url);
 		HttpConnectionUtil.connectPostJsonForFbMessageSend(url, phoneNumber, result);
+	}
+	
+	/**
+	 * 최근 게임 정보
+	 */
+	@Override
+	public RecentGamesDto recentGameInfo(long summonerId) {
+		RecentGamesDto recentGame = null;
+		String lolApiKey = apiKeyService.getApiKeyByKeyName("lol").getKeyValue();
+		String url = baseUrl + "api/lol/KR/v1.3/game/by-summoner/" + summonerId + "/recent?api_key=" + lolApiKey;
+		try {
+			String result = HttpConnectionUtil.connectGetJsonForLoL(url);
+			
+			if (result != null && result.length() > 0) {
+				recentGame = (RecentGamesDto) JsonConvertUtil.jsonConvertToObject(result, RecentGamesDto.class);
+			} else {
+				logger.debug("### result = null");
+			}
+		} catch (Exception e) {
+			logger.debug("### error",e);
+		}
+		
+		return recentGame;
 	}
 
 	

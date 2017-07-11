@@ -1,6 +1,7 @@
 package com.hj.lolhuni.util;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -84,7 +85,7 @@ public class HttpConnectionUtil {
 	/**
 	 * http get for json type for CurrentGameInfo
 	 */
-	public static String connectGetJsonForCurrentGameInfo(String url) {
+	public static String connectGetJsonForLoL(String url) {
 		
 		String ret = "";
 		
@@ -107,12 +108,17 @@ public class HttpConnectionUtil {
 			
 			ret = response.toString();
 			
+		} catch (FileNotFoundException e) {
+			
 		} catch (Exception e) {
+			logger.error("### error",e);
 		}
 		
 		
 		return ret;
 	}
+	
+	
 	
 	/**
 	 * 페이스북 메신저로 메시지 보내기

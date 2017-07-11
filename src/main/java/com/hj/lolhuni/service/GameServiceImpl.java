@@ -1,12 +1,14 @@
 package com.hj.lolhuni.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.hj.lolhuni.model.Game;
 import com.hj.lolhuni.model.data.Notification;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.repository.GameRepository;
 
+@Service
 public class GameServiceImpl implements GameService {
 
 	@Autowired
@@ -27,6 +29,19 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	@Override
+	public Game SearchBySummonerAndPlayNotifiactionAndResultNotification(Summoner summoner, Notification notification,Notification notification2) {
+		Game game = null;
+		
+		try {
+			game = gameRepository.findBySummonerAndPlayNotificationAndResultNotification(summoner, notification,notification2);
+		} catch (Exception e) {
+			
+		}
+		
+		return game;
+	}
+	
+	@Override
 	public Game saveGame(long gameId,Summoner summoner) {
 		Game game = new Game();
 		game.setGameId(gameId);
@@ -36,5 +51,10 @@ public class GameServiceImpl implements GameService {
 		
 		game = gameRepository.save(game);
 		return game;
+	}
+	
+	@Override
+	public void saveGame(Game game) {
+		gameRepository.save(game);
 	}
 }

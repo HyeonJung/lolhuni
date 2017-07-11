@@ -15,6 +15,8 @@ import com.hj.lolhuni.model.data.ChampionInfo;
 import com.hj.lolhuni.model.data.Notification;
 import com.hj.lolhuni.model.lol.CurrentGameInfo;
 import com.hj.lolhuni.model.lol.CurrentGameParticipant;
+import com.hj.lolhuni.model.lol.GameDto;
+import com.hj.lolhuni.model.lol.RecentGamesDto;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.service.ApiKeyService;
 import com.hj.lolhuni.service.GameService;
@@ -113,7 +115,7 @@ public class ScheduledTasks {
 	 /**
 	  * 5분마다 게임 체크 (db)
 	  */
-	 @Scheduled(fixedRate = 300000)
+	 @Scheduled(fixedRate = 60000)
 	 public void checkCurrentGame() {
 		
 		CurrentGameInfo gameInfo = null;
@@ -129,6 +131,26 @@ public class ScheduledTasks {
 			gameInfo = lolService.getGameInfo(summoner.getId());
 			if (gameInfo == null) {
 				logger.debug("### {}님은 현재 게임 중이 아닙니다.", summoner.getName());
+				
+				Game game = gameService.SearchBySummonerAndPlayNotifiactionAndResultNotification(summoner, Notification.PUSH, Notification.PEND);
+				
+				if (game != null) {
+					RecentGamesDto recentGame = lolService.recentGameInfo(summoner.getId());
+					
+					for (GameDto gameDto : recentGame.getGames()) {
+						if (gameDto.getGameId() == game.getGameId()) {
+							for (Target target : targets) {
+								User user = userService.getUser(target.getUserNo());
+								String win = gameDto.getStats().isWin() ? "승리" : "패배";
+								if (user != null) {
+									lolService.sendFbMessage(summoner.getName() + "님이 " + win + "하셨습니다.", user.getTel());
+								}
+							}
+						}
+					}
+					game.setResultNotification(Notification.PUSH);
+					gameService.saveGame(game);
+				}
 				
 			} else {
 				
