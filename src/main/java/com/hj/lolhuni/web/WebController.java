@@ -23,5 +23,10 @@ public class WebController {
 		return lolService.getGameInfo(summoner.getId());
 	}
 	
+	@RequestMapping("riot.txt")
+    public String riotVerify() {
+    	return "6e513f73-f636-4e35-afbd-1131ceec58f2";
+    }
+	
 
 }
