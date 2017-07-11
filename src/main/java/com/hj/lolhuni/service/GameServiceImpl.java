@@ -1,5 +1,7 @@
 package com.hj.lolhuni.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,16 +31,16 @@ public class GameServiceImpl implements GameService {
 	}
 	
 	@Override
-	public Game SearchBySummonerAndPlayNotifiactionAndResultNotification(Summoner summoner, Notification notification,Notification notification2) {
-		Game game = null;
+	public List<Game> SearchBySummonerAndPlayNotifiactionAndResultNotification(Summoner summoner, Notification notification,Notification notification2) {
+		List<Game> games = null;
 		
 		try {
-			game = gameRepository.findBySummonerAndPlayNotificationAndResultNotification(summoner, notification,notification2);
+			games = gameRepository.findBySummonerAndPlayNotificationAndResultNotification(summoner, notification,notification2);
 		} catch (Exception e) {
 			
 		}
 		
-		return game;
+		return games;
 	}
 	
 	@Override

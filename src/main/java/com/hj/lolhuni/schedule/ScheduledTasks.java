@@ -68,24 +68,31 @@ public class ScheduledTasks {
 			if (gameInfo == null) {
 				logger.debug("### {}님은 현재 게임 중이 아닙니다.", summoner.getName());
 				
-				Game game = gameService.SearchBySummonerAndPlayNotifiactionAndResultNotification(summoner, Notification.PUSH, Notification.PEND);
+				List<Game> games = gameService.SearchBySummonerAndPlayNotifiactionAndResultNotification(summoner, Notification.PUSH, Notification.PEND);
 				
-				if (game != null) {
+				if (games != null && games.size() > 0) {
 					RecentGamesDto recentGame = lolService.recentGameInfo(summoner.getId());
-					
-					for (GameDto gameDto : recentGame.getGames()) {
-						if (gameDto.getGameId() == game.getGameId()) {
-							for (Target target : targets) {
-								User user = userService.getUser(target.getUserNo());
-								String win = gameDto.getStats().isWin() ? "승리" : "패배";
-								if (user != null) {
-									lolService.sendFbMessage(summoner.getName() + "님이 " + win + "하셨습니다.", user.getTel());
+					for (Game game : games) {
+						boolean send = false;
+						for (GameDto gameDto : recentGame.getGames()) {
+							if (gameDto.getGameId() == game.getGameId()) {
+								for (Target target : targets) {
+									User user = userService.getUser(target.getUserNo());
+									String win = gameDto.getStats().isWin() ? "승리" : "패배";
+									if (user != null) {
+										lolService.sendFbMessage(summoner.getName() + "님이 " + win + "하셨습니다.", user.getTel());
+										send = true;
+									}
 								}
 							}
 						}
+						if (send) {
+							game.setResultNotification(Notification.PUSH);
+							gameService.saveGame(game);
+						}
 					}
-					game.setResultNotification(Notification.PUSH);
-					gameService.saveGame(game);
+					
+					
 				}
 				
 			} else {
