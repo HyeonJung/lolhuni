@@ -8,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.hj.lolhuni.model.Game;
 import com.hj.lolhuni.model.Target;
 import com.hj.lolhuni.model.User;
 import com.hj.lolhuni.model.data.ChampionInfo;
+import com.hj.lolhuni.model.data.Notification;
 import com.hj.lolhuni.model.lol.CurrentGameInfo;
 import com.hj.lolhuni.model.lol.CurrentGameParticipant;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.service.ApiKeyService;
+import com.hj.lolhuni.service.GameService;
 import com.hj.lolhuni.service.LoLService;
 import com.hj.lolhuni.service.SummonerService;
 import com.hj.lolhuni.service.TargetService;
@@ -39,6 +42,9 @@ public class ScheduledTasks {
 	 
 	 @Autowired
 	 UserService userService;
+	 
+	 @Autowired
+	 GameService gameService;
 	 /**
 	  * 5분마다 게임 체크
 	  */
@@ -124,31 +130,36 @@ public class ScheduledTasks {
 			if (gameInfo == null) {
 				logger.debug("### {}님은 현재 게임 중이 아닙니다.", summoner.getName());
 				
-				
 			} else {
-				String championName = "";
-				 
-				for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
-					if (participant.getSummonerId() == summoner.getId()) {
-						String champId = "champ" + participant.getChampionId();
-						ChampionInfo championInfo = ChampionInfo.valueOf(champId);
-						championName = championInfo.getChampionName();
+				
+				Game game = gameService.SearchByGameIdAndSummonerAndPlayNotifiaction(gameInfo.getGameId(),summoner, Notification.PUSH);
+				
+				if (game == null) {
+					String championName = "";
+					 
+					for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
+						if (participant.getSummonerId() == summoner.getId()) {
+							String champId = "champ" + participant.getChampionId();
+							ChampionInfo championInfo = ChampionInfo.valueOf(champId);
+							championName = championInfo.getChampionName();
+						}
 					}
-				}
-				 
-				 
-				logger.debug("### {}님은 현재 {}(으)로 게임 중입니다.",summoner.getName(),championName);
-				 
-				if (gameInfo.getGameLength() > 0 && gameInfo.getGameLength() < 300) {
+					 
+					logger.debug("### {}님은 현재 {}(으)로 게임 중입니다.",summoner.getName(),championName);
+					 
+				
 					for (Target target : targets) {
 						User user = userService.getUser(target.getUserNo());
 						if (user != null) {
 							lolService.sendFbMessage(summoner.getName() + "님은 현재 " + championName + "(으)로 게임 중입니다.", user.getTel());
 						}
-							
+								
 					}
+					
+					gameService.saveGame(gameInfo.getGameId(),summoner);
+					
 				}
-		     }
+			}
 		}
 		
 		logger.debug("==============================================");
