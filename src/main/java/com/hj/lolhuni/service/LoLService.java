@@ -11,8 +11,8 @@ public interface LoLService {
 	
 	CurrentGameInfo getGameInfo(long summonerId);
 	
-	public void sendFbMessage(String result, String phoneNumber);
+	public void sendFbMessage(String message, String phoneNumber);
 	
 	RecentGamesDto recentGameInfo(long summonerId);
-	void getGameStats(RawStatsDto stats);
+
 }

@@ -82,11 +82,11 @@ public class LoLServiceImpl implements LoLService {
 	 * 메시지 보내기
 	 */
 	@Override
-	public void sendFbMessage(String result, String phoneNumber) {
+	public void sendFbMessage(String message, String phoneNumber) {
 		
 		String url = fbUrl + "me/messages?access_token=" + fbAccessToken;
 		logger.debug("### url = {}",url);
-		HttpConnectionUtil.connectPostJsonForFbMessageSend(url, phoneNumber, result);
+		HttpConnectionUtil.connectPostJsonForFbMessageSend(url, phoneNumber, message);
 	}
 	
 	/**
@@ -112,22 +112,5 @@ public class LoLServiceImpl implements LoLService {
 		return recentGame;
 	}
 	
-	/**
-	 * stats
-	 */
-	@Override
-	public void getGameStats(RawStatsDto stats) {
-		int kill = stats.getChampionsKilled();
-		int death = stats.getNumDeaths();
-		int assists = stats.getAssists();
-		boolean perfect = true;
-		double calDeath = death;
-		if (calDeath < 1) {
-			calDeath = 1;
-			perfect = false;
-		}
-		double average = (double) kill + (double) assists / calDeath;
-	}
-
 	
 }

@@ -83,7 +83,6 @@ public class ScheduledTasks {
 									+ gameDto.getStats().getChampionsKilled() + "/" + gameDto.getStats().getNumDeaths() + "/" + gameDto.getStats().getAssists() +")";
  									
 									if (user != null) {
-										
 										lolService.sendFbMessage(message, user.getTel());
 										send = true;
 									}

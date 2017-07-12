@@ -28,7 +28,8 @@ public class SwaggerConfig {
 				.tags(new Tag("KeyApi","키 관련 API"),
 						new Tag("SummonerApi","소환사 관련 API"),
 						new Tag("UserApi","유저 관련 API"),
-						new Tag("TargetApi", "타겟 API"));
+						new Tag("TargetApi", "타겟 API"),
+						new Tag("TestApi", "테스트용 API"));
 	}
 	
 	private ApiInfo apiInfo() {
