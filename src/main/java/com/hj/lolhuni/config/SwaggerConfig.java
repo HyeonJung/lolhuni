@@ -24,7 +24,7 @@ public class SwaggerConfig {
 					.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
 					.paths(PathSelectors.any())
 					.build()
-				.apiInfo(apiInfo())
+	                .apiInfo(apiInfo())
 				.tags(new Tag("KeyApi","키 관련 API"),
 						new Tag("SummonerApi","소환사 관련 API"),
 						new Tag("UserApi","유저 관련 API"),
@@ -34,7 +34,7 @@ public class SwaggerConfig {
 	private ApiInfo apiInfo() {
 
 		return new ApiInfo(
-                "LOLHUNI REST API"  // Lunchee 대신에 애플리케이션명을 작성 
+                "LOLHUNI REST API" 
                 , "REST API Document"
                 , "1.0.0"
                 , "Terms of service"
