@@ -39,7 +39,7 @@ public class ChampionServiceImpl implements ChampionService{
 			String key = keys.next();
 			ChampionDto ChampionData = championDto.getData().get(key);
 			
-			Champion champion = championRepository.getOne(ChampionData.getId());
+			Champion champion = championRepository.findOne(ChampionData.getId());
 			if (champion == null) {
 				champion = new Champion();
 			}
