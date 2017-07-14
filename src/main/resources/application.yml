@@ -3,6 +3,8 @@ fbAccessToken : EAAHLpxwzM0MBADkd6os5yWFqSpzBTOdcX1lZAZAWMV0bBVMHFeddsec4c4ZAnbC
 exchangeNumber : +82
 fbUrl : https://graph.facebook.com/v2.6/
 lolImgUrl : http://ddragon.leagueoflegends.com/cdn/img/champion/splash/
+victoryImg : https://github.com/HyeonJung/lolhuni/blob/master/assets/victory.png?raw=true
+defeatImg : https://github.com/HyeonJung/lolhuni/blob/master/assets/defeat.png?raw=true
 
 logging:
   config: classpath:logback.xml

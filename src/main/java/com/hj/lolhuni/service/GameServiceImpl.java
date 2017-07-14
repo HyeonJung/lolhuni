@@ -43,6 +43,13 @@ public class GameServiceImpl implements GameService {
 	
 	@Value("${lolImgUrl}")
 	String lolImgUrl;
+	
+	@Value("${victoryImg}")
+	String victoryImg;
+	
+	@Value("${defeatImg}")
+	String defeatImg;
+	
 	/**
 	 * 게임 시작 알림 메시지 보낸 여부 확인
 	 */
@@ -163,6 +170,7 @@ public class GameServiceImpl implements GameService {
 		int participantId = 0;
 		boolean send = false;
 		String win = "";
+		String resultImgUrl = "";
 		
 		for (ParticipantIdentityDto participantIdentity : match.getParticipantIdentities()) {
 			if (summoner.getId() == participantIdentity.getPlayer().getSummonerId()) {
@@ -182,20 +190,28 @@ public class GameServiceImpl implements GameService {
 			
 			if (participant.getParticipantId() == participantId) {
 				win = participant.getStats().isWin() ? "승리" : "패배";
+				resultImgUrl = participant.getStats().isWin() ? victoryImg : defeatImg;
 				player = participant;
+
 				
 			}
 			
 		}
 		
+		String title = summoner.getName() + "님이 " + win  + "하셨습니다.\\r";
+		String subTitle = "";
+		if (player.getTeamId() == 100) {
+			subTitle = createSubtitle(player, team1);
+		} else {
+			subTitle = createSubtitle(player, team2);
+		}
+		
 		for (Target target : targets) {
 			
 			User user = userService.getUser(target.getUserNo());
-			
-			String message = summoner.getName() + "님이 " + win  + "하셨습니다. (" + player.getStats().getKills() + "/" + player.getStats().getDeaths() + "/" + player.getStats().getAssists() + ")";
-			
+
 			if (user != null) {
-				lolService.sendFbMessage(message, user.getTel());
+				lolService.sendFbMessageWithTemplate(user.getTel(),resultImgUrl,title,subTitle);
 				send = true;
 			}
 			
@@ -206,7 +222,36 @@ public class GameServiceImpl implements GameService {
 			saveGame(game);
 		}
 		
+	}
+	
+	/**
+	 * 결과
+	 * @param player
+	 * @param team
+	 * @return
+	 */
+	public String createSubtitle(ParticipantDto player, CustomTeamStats team) {
+		ParticipantStatsDto stat = player.getStats();
+		int kill = stat.getKills();
+		int death = stat.getDeaths();
+		int assists = stat.getAssists();
+		boolean perfect = false;
+		int calDeath = death;
+		double killRatio = Double.parseDouble(String.format("%.2f", (((double) kill + (double) assists) / (double) team.getTotalKill())));
+		int ratio = (int)(killRatio * 100);
+		if (death < 1) {
+			perfect = true;
+			calDeath = 1;
+		}
 		
+		logger.debug("### totalKill = {}",team.getTotalKill());
+		double average = Double.parseDouble(String.format("%.2f",((double) kill + (double) assists) / (double) calDeath));
+		
+		String message = "KDA = ";
+		message += perfect ? "Perfect" : average;
+		message += " (" + kill + "/" + death + "/" + assists + ")\\r";
+		message += "킬관여율 = " + ratio + "%";
+		return message;
 	}
 
 }
