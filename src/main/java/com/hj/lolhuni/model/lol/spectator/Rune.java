@@ -1,4 +1,4 @@
-package com.hj.lolhuni.model.lol;
+package com.hj.lolhuni.model.lol.spectator;
 
 public class Rune {
 	private int count;

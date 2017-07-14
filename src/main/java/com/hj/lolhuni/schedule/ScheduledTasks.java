@@ -10,14 +10,9 @@ import org.springframework.stereotype.Component;
 
 import com.hj.lolhuni.model.Game;
 import com.hj.lolhuni.model.Target;
-import com.hj.lolhuni.model.User;
-import com.hj.lolhuni.model.data.ChampionInfo;
 import com.hj.lolhuni.model.data.Notification;
-import com.hj.lolhuni.model.lol.CurrentGameInfo;
-import com.hj.lolhuni.model.lol.CurrentGameParticipant;
-import com.hj.lolhuni.model.lol.GameDto;
-import com.hj.lolhuni.model.lol.RecentGamesDto;
 import com.hj.lolhuni.model.lol.Summoner;
+import com.hj.lolhuni.model.lol.spectator.CurrentGameInfo;
 import com.hj.lolhuni.service.ApiKeyService;
 import com.hj.lolhuni.service.GameService;
 import com.hj.lolhuni.service.LoLService;
@@ -68,65 +63,24 @@ public class ScheduledTasks {
 			if (gameInfo == null) {
 				logger.debug("### {}님은 현재 게임 중이 아닙니다.", summoner.getName());
 				
-				List<Game> games = gameService.SearchBySummonerAndPlayNotifiactionAndResultNotification(summoner, Notification.PUSH, Notification.PEND);
-				
-				if (games != null && games.size() > 0) {
-					RecentGamesDto recentGame = lolService.recentGameInfo(summoner.getId());
-					for (Game game : games) {
-						boolean send = false;
-						for (GameDto gameDto : recentGame.getGames()) {
-							if (gameDto.getGameId() == game.getGameId()) {
-								for (Target target : targets) {
-									User user = userService.getUser(target.getUserNo());
-									String win = gameDto.getStats().isWin() ? "승리" : "패배";
-									String message = summoner.getName() + "님이 " + win + "하셨습니다. ("
-									+ gameDto.getStats().getChampionsKilled() + "/" + gameDto.getStats().getNumDeaths() + "/" + gameDto.getStats().getAssists() +")";
- 									
-									if (user != null) {
-										lolService.sendFbMessage(message, user.getTel());
-										send = true;
-									}
-								}
-							}
-						}
-						if (send) {
-							game.setResultNotification(Notification.PUSH);
-							gameService.saveGame(game);
-						}
-					}		
-				}
-				
 			} else {
 				
 				Game game = gameService.SearchByGameIdAndSummonerAndPlayNotifiaction(gameInfo.getGameId(),summoner, Notification.PUSH);
 				
 				if (game == null) {
-					String championName = "";
-					 
-					for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
-						if (participant.getSummonerId() == summoner.getId()) {
-							String champId = "champ" + participant.getChampionId();
-							ChampionInfo championInfo = ChampionInfo.valueOf(champId);
-							championName = championInfo.getChampionName();
-						}
-					}
 					
-					logger.debug("### {}님은 현재 {}(으)로 게임 중입니다.",summoner.getName(),championName);
-					
-					for (Target target : targets) {
-						User user = userService.getUser(target.getUserNo());
-						if (user != null) {
-							lolService.sendFbMessage(summoner.getName() + "님은 현재 " + championName + "(으)로 게임 중입니다.", user.getTel());
-						}
-								
-					}
-					
-					gameService.saveGame(gameInfo.getGameId(),summoner);
+					gameService.sendGameStart(gameInfo, summoner, targets);
 					
 				} else {
+					
 					logger.debug("### {}님은 현재 게임 중입니다.",summoner.getName());
+					
 				}
+				
 			}
+			
+			gameService.sendGameResult(summoner, targets);
+			
 		}
 	 }
 }

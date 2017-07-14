@@ -2,6 +2,11 @@ package com.hj.lolhuni.model.lol;
 
 import java.util.List;
 
+/**
+ * 삭제예정
+ * @author hj
+ *
+ */
 public class GameDto {
 
 	private String gameType;

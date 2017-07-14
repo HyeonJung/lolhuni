@@ -9,9 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hj.lolhuni.model.Game;
+import com.hj.lolhuni.model.Target;
+import com.hj.lolhuni.model.User;
+import com.hj.lolhuni.model.data.ChampionInfo;
 import com.hj.lolhuni.model.data.Notification;
-import com.hj.lolhuni.model.lol.RawStatsDto;
 import com.hj.lolhuni.model.lol.Summoner;
+import com.hj.lolhuni.model.lol.match.CustomTeamStats;
+import com.hj.lolhuni.model.lol.match.MatchDto;
+import com.hj.lolhuni.model.lol.match.ParticipantDto;
+import com.hj.lolhuni.model.lol.match.ParticipantIdentityDto;
+import com.hj.lolhuni.model.lol.match.ParticipantStatsDto;
+import com.hj.lolhuni.model.lol.spectator.CurrentGameInfo;
+import com.hj.lolhuni.model.lol.spectator.CurrentGameParticipant;
 import com.hj.lolhuni.repository.GameRepository;
 
 @Service
@@ -22,6 +31,15 @@ public class GameServiceImpl implements GameService {
 	@Autowired
 	GameRepository gameRepository;
 	
+	@Autowired
+	LoLService lolService;
+	
+	@Autowired
+	UserService userService;
+	
+	/**
+	 * 게임 시작 알림 메시지 보낸 여부 확인
+	 */
 	@Override
 	public Game SearchByGameIdAndSummonerAndPlayNotifiaction(long gameId, Summoner summoner, Notification notification) {
 		
@@ -36,6 +54,9 @@ public class GameServiceImpl implements GameService {
 		return game;
 	}
 	
+	/**
+	 * 게임 결과 알림 메시지 보낸 여부 확인
+	 */
 	@Override
 	public List<Game> SearchBySummonerAndPlayNotifiactionAndResultNotification(Summoner summoner, Notification notification,Notification notification2) {
 		List<Game> games = null;
@@ -49,6 +70,9 @@ public class GameServiceImpl implements GameService {
 		return games;
 	}
 	
+	/**
+	 * 저장
+	 */
 	@Override
 	public Game saveGame(long gameId,Summoner summoner) {
 		Game game = new Game();
@@ -62,28 +86,120 @@ public class GameServiceImpl implements GameService {
 		return game;
 	}
 	
+	/**
+	 * 저장
+	 */
 	@Override
 	public void saveGame(Game game) {
 		gameRepository.save(game);
 	}
 	
 	/**
-	 * stats
+	 * 게임 결과 알림
 	 */
 	@Override
-	public void getGameStats(RawStatsDto stats) {
-		int kill = stats.getChampionsKilled();
-		int death = stats.getNumDeaths();
-		int assists = stats.getAssists();
-		boolean perfect = true;
-		double calDeath = death;
-		if (calDeath < 1) {
-			calDeath = 1;
-			perfect = false;
-		}
-		double average = Double.parseDouble(String.format("%.2f",((double) kill + (double) assists) / calDeath));
+	public void sendGameResult(Summoner summoner, List<Target> targets) {
+		List<Game> games = SearchBySummonerAndPlayNotifiactionAndResultNotification(summoner, Notification.PUSH, Notification.PEND);
 		
-		logger.debug("### stats [ 킬 = {}, 데스 = {}, 어시 = {}, 평점 = {} ]",kill,death,assists,average);
+		if (games != null && games.size() > 0) {
+			
+			for (Game game : games) {
+				MatchDto match = lolService.getMatchInfo(game.getGameId());
+				if (match != null) {
+					getGameResult(match,summoner,targets,game);
+				}
+			}		
+		}
+		
+		
+	}
+	
+	/**
+	 * 시작 알림
+	 */
+	@Override
+	public void sendGameStart(CurrentGameInfo gameInfo, Summoner summoner, List<Target> targets) {
+		String championName = "";
+		
+		for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
+			if (participant.getSummonerId() == summoner.getId()) {
+				String champId = "champ" + participant.getChampionId();
+				ChampionInfo championInfo = ChampionInfo.valueOf(champId);
+				championName = championInfo.getChampionName();
+			}
+		}
+		
+		logger.debug("### {}님은 현재 {}(으)로 게임 중입니다.",summoner.getName(),championName);
+		
+		for (Target target : targets) {
+			User user = userService.getUser(target.getUserNo());
+			if (user != null) {
+				lolService.sendFbMessage(summoner.getName() + "님은 현재 " + championName + "(으)로 게임 중입니다.", user.getTel());
+			}
+					
+		}
+		
+		saveGame(gameInfo.getGameId(),summoner);
+	}
+	
+	
+	/**
+	 * 결과
+	 * @param match
+	 * @param summoner
+	 */
+	public void getGameResult(MatchDto match,Summoner summoner,List<Target> targets,Game game) {
+		
+		CustomTeamStats team1 = new CustomTeamStats();
+		CustomTeamStats team2 = new CustomTeamStats();
+		ParticipantDto player = null;
+		int participantId = 0;
+		boolean send = false;
+		String win = "";
+		
+		for (ParticipantIdentityDto participantIdentity : match.getParticipantIdentities()) {
+			if (summoner.getId() == participantIdentity.getPlayer().getSummonerId()) {
+				participantId = participantIdentity.getParticipantId();
+			}
+		}
+		
+		for (ParticipantDto participant : match.getParticipants()) {
+			
+			ParticipantStatsDto stats = participant.getStats();
+			
+			if (participant.getTeamId() == 100) {
+				team1.addData(stats.getKills(), stats.getDeaths(), stats.getAssists(), stats.getTrueDamageDealtToChampions());
+			} else {
+				team2.addData(stats.getKills(), stats.getDeaths(), stats.getAssists(), stats.getTrueDamageDealtToChampions());
+			}
+			
+			if (participant.getParticipantId() == participantId) {
+				win = participant.getStats().isWin() ? "승리" : "패배";
+				player = participant;
+				
+			}
+			
+		}
+		
+		for (Target target : targets) {
+			
+			User user = userService.getUser(target.getUserNo());
+			
+			String message = summoner.getName() + "님이 " + win  + "하셨습니다. (" + player.getStats().getKills() + "/" + player.getStats().getDeaths() + "/" + player.getStats().getAssists() + ")";
+			
+			if (user != null) {
+				lolService.sendFbMessage(message, user.getTel());
+				send = true;
+			}
+			
+		}
+		
+		if (send) {
+			game.setResultNotification(Notification.PUSH);
+			saveGame(game);
+		}
+		
+		
 	}
 
 }

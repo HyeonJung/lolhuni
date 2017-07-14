@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hj.lolhuni.model.lol.CurrentGameInfo;
 import com.hj.lolhuni.model.lol.GameDto;
 import com.hj.lolhuni.model.lol.RecentGamesDto;
 import com.hj.lolhuni.model.lol.Summoner;
+import com.hj.lolhuni.model.lol.spectator.CurrentGameInfo;
 import com.hj.lolhuni.service.GameService;
 import com.hj.lolhuni.service.LoLService;
 
@@ -70,23 +70,6 @@ public class WebController {
 		
 	}
 	
-	/**
-	 * 
-	 */
-	@ApiOperation("게임 스탯")
-	@RequestMapping(value = "/game/stats/{id}", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseEntity<?> getGameStats(@PathVariable long id) {
-		
-		RecentGamesDto recentGameDto = lolService.recentGameInfo(id);
-		
-		for (GameDto game : recentGameDto.getGames()) {
-			gameService.getGameStats(game.getStats());
-		}
-		
-		
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
 	
 
 }
