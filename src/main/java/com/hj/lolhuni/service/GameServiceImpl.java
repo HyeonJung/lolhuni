@@ -6,12 +6,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.hj.lolhuni.model.Champion;
 import com.hj.lolhuni.model.Game;
 import com.hj.lolhuni.model.Target;
 import com.hj.lolhuni.model.User;
-import com.hj.lolhuni.model.data.ChampionInfo;
 import com.hj.lolhuni.model.data.Notification;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.model.lol.match.CustomTeamStats;
@@ -37,6 +38,11 @@ public class GameServiceImpl implements GameService {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	ChampionService championService;
+	
+	@Value("${lolImgUrl}")
+	String lolImgUrl;
 	/**
 	 * 게임 시작 알림 메시지 보낸 여부 확인
 	 */
@@ -120,21 +126,22 @@ public class GameServiceImpl implements GameService {
 	@Override
 	public void sendGameStart(CurrentGameInfo gameInfo, Summoner summoner, List<Target> targets) {
 		String championName = "";
+		String championImageUrl = "";
 		
 		for (CurrentGameParticipant participant : gameInfo.getParticipants()) {
 			if (participant.getSummonerId() == summoner.getId()) {
-				String champId = "champ" + participant.getChampionId();
-				ChampionInfo championInfo = ChampionInfo.valueOf(champId);
-				championName = championInfo.getChampionName();
+				Champion champion = championService.getChampionInfo((int) participant.getChampionId());
+				championName = champion.getName();
+				championImageUrl = lolImgUrl + champion.getChampionKey() + "_0.jpg";
 			}
 		}
 		
 		logger.debug("### {}님은 현재 {}(으)로 게임 중입니다.",summoner.getName(),championName);
-		
+		String title = summoner.getName() + "님은 현재 " + championName + "(으)로 게임 중입니다.";
 		for (Target target : targets) {
 			User user = userService.getUser(target.getUserNo());
 			if (user != null) {
-				lolService.sendFbMessage(summoner.getName() + "님은 현재 " + championName + "(으)로 게임 중입니다.", user.getTel());
+				lolService.sendFbMessageWithTemplate(user.getTel(),championImageUrl,title,"");
 			}
 					
 		}

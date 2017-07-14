@@ -2,6 +2,7 @@ baseUrl : https://kr.api.riotgames.com/
 fbAccessToken : EAAHLpxwzM0MBADkd6os5yWFqSpzBTOdcX1lZAZAWMV0bBVMHFeddsec4c4ZAnbCdmWWOBiAQhicVm58Eukg6qdtE7nsbmj7diARe4dDmvZBfwcmWpxxYyYlfRHpEN3TWyW9LWAY6pr7B1GiOpOFJiTxYxoPgX5EpaDjRKQlfi37raUNWfEXx
 exchangeNumber : +82
 fbUrl : https://graph.facebook.com/v2.6/
+lolImgUrl : http://ddragon.leagueoflegends.com/cdn/img/champion/splash/
 
 logging:
   config: classpath:logback.xml

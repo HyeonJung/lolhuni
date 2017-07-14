@@ -10,6 +10,7 @@ import com.hj.lolhuni.model.lol.RecentGamesDto;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.model.lol.match.MatchDto;
 import com.hj.lolhuni.model.lol.spectator.CurrentGameInfo;
+import com.hj.lolhuni.model.lol.staticdata.ChampionListDto;
 import com.hj.lolhuni.util.HttpConnectionUtil;
 import com.hj.lolhuni.util.JsonConvertUtil;
 
@@ -90,6 +91,17 @@ public class LoLServiceImpl implements LoLService {
 	}
 	
 	/**
+	 * 메시지 보내기 (템플릿)
+	 */
+	@Override
+	public void sendFbMessageWithTemplate(String phoneNumber, String imageUrl, String title, String subTitle) {
+		
+		String url = fbUrl + "me/messages?access_token=" + fbAccessToken;
+		logger.debug("### url = {}",url);
+		HttpConnectionUtil.connectPostJsonForFbMessageSendWithTemplate(url,imageUrl, phoneNumber, title,subTitle);
+	}
+	
+	/**
 	 * 최근 게임 정보
 	 */
 	@Override
@@ -133,6 +145,29 @@ public class LoLServiceImpl implements LoLService {
 		}
 		
 		return matchDto;
+	}
+	
+	/**
+	 * 챔피언 리스트
+	 */
+	@Override
+	public ChampionListDto getChampionList() {
+		ChampionListDto championList = null;
+		String lolApiKey = apiKeyService.getApiKeyByKeyName("lol").getKeyValue();
+		String url = baseUrl + "/lol/static-data/v3/champions/?locale=ko_KR&tags=image&api_key=" + lolApiKey;
+		
+		try {
+			String result = HttpConnectionUtil.connectGetJsonForLoL(url);
+			
+			if (result != null && result.length() > 0) {
+				championList = (ChampionListDto) JsonConvertUtil.jsonConvertToObject(result, ChampionListDto.class);
+			} else {
+				logger.debug("### result = null");
+			}
+		} catch (Exception e) {
+			logger.debug("### error",e);
+		}
+		return championList;
 	}
 	
 	

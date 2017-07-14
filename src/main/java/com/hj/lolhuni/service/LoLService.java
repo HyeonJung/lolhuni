@@ -4,6 +4,7 @@ import com.hj.lolhuni.model.lol.RecentGamesDto;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.model.lol.match.MatchDto;
 import com.hj.lolhuni.model.lol.spectator.CurrentGameInfo;
+import com.hj.lolhuni.model.lol.staticdata.ChampionListDto;
 
 public interface LoLService {
 	
@@ -11,10 +12,12 @@ public interface LoLService {
 	
 	CurrentGameInfo getGameInfo(long summonerId);
 	
-	public void sendFbMessage(String message, String phoneNumber);
+	void sendFbMessage(String message, String phoneNumber);
 	
 	RecentGamesDto recentGameInfo(long summonerId);
 	
 	MatchDto getMatchInfo(long matchId);
 
+	ChampionListDto getChampionList();
+	void sendFbMessageWithTemplate(String phoneNumber, String imageUrl, String title, String subTitle);
 }

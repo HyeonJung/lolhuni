@@ -1,5 +1,7 @@
 package com.hj.lolhuni.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.hj.lolhuni.model.lol.GameDto;
-import com.hj.lolhuni.model.lol.RecentGamesDto;
+import com.hj.lolhuni.model.Champion;
 import com.hj.lolhuni.model.lol.Summoner;
 import com.hj.lolhuni.model.lol.spectator.CurrentGameInfo;
+import com.hj.lolhuni.service.ChampionService;
 import com.hj.lolhuni.service.GameService;
 import com.hj.lolhuni.service.LoLService;
 
@@ -24,11 +26,16 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = "TestApi")
 public class WebController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(WebController.class);
+	
 	@Autowired
 	LoLService lolService;
 	
 	@Autowired
 	GameService gameService;
+	
+	@Autowired
+	ChampionService championService;
 	
 	/**
 	 * 현재 게임 정보
@@ -69,6 +76,35 @@ public class WebController {
 		return new ResponseEntity<>(HttpStatus.OK);
 		
 	}
+	
+	/**
+	 * 챔피언
+	 */
+	@ApiOperation("챔피언 등록")
+	@RequestMapping(value = "champion", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> championRegist() {
+		
+		championService.registChampionList();
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * 챔피언
+	 */
+	@ApiOperation("챔피언 테스트")
+	@RequestMapping(value = "champion/test", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> championTest() {
+		
+		Champion champion = championService.getChampionInfo(1);
+		logger.debug("### champion = {}",champion);
+		return new ResponseEntity<Champion>(champion,HttpStatus.OK);
+		
+	}
+	
 	
 	
 
