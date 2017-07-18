@@ -101,6 +101,18 @@ public class LoLServiceImpl implements LoLService {
 		HttpConnectionUtil.connectPostJsonForFbMessageSendWithTemplate(url,imageUrl, phoneNumber, title,subTitle);
 	}
 	
+
+	/**
+	 * 메시지 보내기 (템플릿 + 버튼)
+	 */
+	@Override
+	public void sendFbMessageWithTemplateButton(String phoneNumber, String imageUrl, String title, String subTitle) {
+		
+		String url = fbUrl + "me/messages?access_token=" + fbAccessToken;
+		logger.debug("### url = {}",url);
+		HttpConnectionUtil.connectPostJsonForFbMessageSendWithTemplateButton(url,imageUrl, phoneNumber, title,subTitle);
+	}
+	
 	/**
 	 * 최근 게임 정보
 	 */

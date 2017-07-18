@@ -158,7 +158,7 @@ public class GameServiceImpl implements GameService {
 	
 	
 	/**
-	 * 결과
+	 * 결과 전송
 	 * @param match
 	 * @param summoner
 	 */
@@ -211,7 +211,7 @@ public class GameServiceImpl implements GameService {
 			User user = userService.getUser(target.getUserNo());
 
 			if (user != null) {
-				lolService.sendFbMessageWithTemplate(user.getTel(),resultImgUrl,title,subTitle);
+				lolService.sendFbMessageWithTemplateButton(user.getTel(),resultImgUrl,title,subTitle);
 				send = true;
 			}
 			

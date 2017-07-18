@@ -20,4 +20,5 @@ public interface LoLService {
 
 	ChampionListDto getChampionList();
 	void sendFbMessageWithTemplate(String phoneNumber, String imageUrl, String title, String subTitle);
+	void sendFbMessageWithTemplateButton(String phoneNumber, String imageUrl, String title, String subTitle);
 }

@@ -19,7 +19,7 @@ public class HttpConnectionUtil {
 	private static final Logger logger = LoggerFactory.getLogger(HttpConnectionUtil.class);
 	
 	/**
-	 * http get for xml type
+	 * http get for xml type;
 	 * @param url
 	 * @return
 	 */
@@ -172,6 +172,50 @@ public class HttpConnectionUtil {
 					+ "{ \"title\":\"" + title + "\", "
 					+ "\"image_url\":\"" +imgUrl + "\","
 					+ "\"subtitle\":\"" + subTitle + "\"}]}}}}", "UTF-8" );
+			
+			HttpClient client = HttpClientBuilder.create().build();
+			HttpPost post = new HttpPost(url);
+			post.setHeader("Content-Type", "application/json");
+			post.setEntity(params);
+			HttpResponse response = client.execute(post);
+			
+			logger.debug("### response = {}",response);
+		} catch (Exception e) {
+			logger.error("### error",e);
+		} finally {
+			
+		}
+		
+		
+		return ret;
+	}
+	
+	/**
+	 * 페이스북 메신저로 메시지 보내기 (템플릿)
+	 * @param url
+	 * @param phoneNumber
+	 * @param text
+	 * @return
+	 */
+	public static String connectPostJsonForFbMessageSendWithTemplateButton(String url,String imgUrl, String phoneNumber, String title,String subTitle) {
+		logger.debug("### url = {}, phoneNumber = {}, text = {}, imgUrl = {}",url,phoneNumber,title,imgUrl);
+		String ret = "";
+		
+		try {			
+			StringEntity params = new StringEntity("{ \"recipient\":{\"phone_number\":\"" + phoneNumber + "\"},"
+					+ "\"message\":{ \"attachment\":{ "
+					+ "\"type\":\"template\","
+					+ "\"payload\":{"
+					+ "\"template_type\":\"generic\","
+					+ "\"elements\":["
+					+ "{ \"title\":\"" + title + "\", "
+					+ "\"image_url\":\"" +imgUrl + "\","
+					+ "\"subtitle\":\"" + subTitle + "\"}, "
+					+ "\"buttons\":[{"
+					+ "\"type\":\"web_url\", "
+					+ "\"url\":\"13.124.165.240:8080/\", "
+					+ "\"title\":\"상세 정보\""
+					+"}]]}}}}", "UTF-8" );
 			
 			HttpClient client = HttpClientBuilder.create().build();
 			HttpPost post = new HttpPost(url);
