@@ -10,6 +10,10 @@ logging:
   config: classpath:logback.xml
  
 spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
   application:
     name: "@pom.artifactId@"
   jpa:
@@ -21,7 +25,7 @@ spring:
     url: jdbc:mariadb://localhost:3306/lolhuni
     username: lolhuni
     password: 'cola12#$'
-        
+
 ---
 
 spring:

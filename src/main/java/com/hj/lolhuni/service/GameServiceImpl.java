@@ -232,6 +232,7 @@ public class GameServiceImpl implements GameService {
 	 */
 	public String createSubtitle(ParticipantDto player, CustomTeamStats team) {
 		ParticipantStatsDto stat = player.getStats();
+		
 		int kill = stat.getKills();
 		int death = stat.getDeaths();
 		int assists = stat.getAssists();
