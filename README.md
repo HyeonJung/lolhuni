@@ -13,7 +13,7 @@
 
 ## System Flow
 
-![](./assets/systemFlow.png)
+![](./assets/systemflow.png)
 
 ## Getting Started
 
