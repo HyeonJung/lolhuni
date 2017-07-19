@@ -34,7 +34,7 @@ public interface GameService {
 	 * @param summoner
 	 * @return
 	 */
-	Game saveGame(long gameId,Summoner summoner);
+	Game saveGame(CurrentGameInfo gameInfo,Summoner summoner);
 	
 	/**
 	 * 저장

@@ -65,7 +65,6 @@
                                 <img src="images/noise.png" style="height:30%; position:relative; top:10%;">
                                 <img src="images/noise.png" style="height:30%; position:relative; top:10%;">
                                 <img src="images/noise.png" style="height:30%; position:relative; top:10%;"><br/>
-                                <span style="top:30%; position:relative;">123 / 9õ</span> 
                             </div>
                          </div>
                      </div>

@@ -41,6 +41,9 @@ public class Game {
 	
 	@Column
 	private Date regDate;
+	
+	@Column
+	private long teamId;
 
 	public long getGameId() {
 		return gameId;
@@ -90,10 +93,19 @@ public class Game {
 		this.regDate = regDate;
 	}
 
+	public long getTeamId() {
+		return teamId;
+	}
+
+	public void setTeamId(long teamId) {
+		this.teamId = teamId;
+	}
+
 	@Override
 	public String toString() {
 		return "Game [gameNo=" + gameNo + ", gameId=" + gameId + ", summoner=" + summoner + ", playNotification="
-				+ playNotification + ", resultNotification=" + resultNotification + ", regDate=" + regDate + "]";
+				+ playNotification + ", resultNotification=" + resultNotification + ", regDate=" + regDate + ", teamId="
+				+ teamId + "]";
 	}
 	
 	

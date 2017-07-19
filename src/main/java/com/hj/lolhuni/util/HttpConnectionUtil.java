@@ -210,12 +210,12 @@ public class HttpConnectionUtil {
 					+ "\"elements\":["
 					+ "{ \"title\":\"" + title + "\", "
 					+ "\"image_url\":\"" +imgUrl + "\","
-					+ "\"subtitle\":\"" + subTitle + "\"}, "
+					+ "\"subtitle\":\"" + subTitle + "\", "
 					+ "\"buttons\":[{"
 					+ "\"type\":\"web_url\", "
-					+ "\"url\":\"13.124.165.240:8080/\", "
+					+ "\"url\":\"http://www.google.co.kr/\", "
 					+ "\"title\":\"상세 정보\""
-					+"}]]}}}}", "UTF-8" );
+					+"}]}]}}}}", "UTF-8" );
 			
 			HttpClient client = HttpClientBuilder.create().build();
 			HttpPost post = new HttpPost(url);

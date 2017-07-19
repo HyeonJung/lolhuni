@@ -20,6 +20,7 @@ import com.hj.lolhuni.model.lol.match.MatchDto;
 import com.hj.lolhuni.model.lol.match.ParticipantDto;
 import com.hj.lolhuni.model.lol.match.ParticipantIdentityDto;
 import com.hj.lolhuni.model.lol.match.ParticipantStatsDto;
+import com.hj.lolhuni.model.lol.match.TeamStatsDto;
 import com.hj.lolhuni.model.lol.spectator.CurrentGameInfo;
 import com.hj.lolhuni.model.lol.spectator.CurrentGameParticipant;
 import com.hj.lolhuni.repository.GameRepository;
@@ -87,13 +88,19 @@ public class GameServiceImpl implements GameService {
 	 * 저장
 	 */
 	@Override
-	public Game saveGame(long gameId,Summoner summoner) {
+	public Game saveGame(CurrentGameInfo gameInfo,Summoner summoner) {
 		Game game = new Game();
-		game.setGameId(gameId);
+		game.setGameId(gameInfo.getGameId());
 		game.setPlayNotification(Notification.PUSH);
 		game.setSummoner(summoner);
 		game.setResultNotification(Notification.PEND);
 		game.setRegDate(new Date());
+		
+		for (CurrentGameParticipant gameParticipant : gameInfo.getParticipants()) {
+			if (gameParticipant.getSummonerId() == summoner.getId()) {
+				game.setTeamId(gameParticipant.getTeamId());
+			}
+		}
 		
 		game = gameRepository.save(game);
 		return game;
@@ -153,7 +160,7 @@ public class GameServiceImpl implements GameService {
 					
 		}
 		
-		saveGame(gameInfo.getGameId(),summoner);
+		saveGame(gameInfo,summoner);
 	}
 	
 	
@@ -172,8 +179,20 @@ public class GameServiceImpl implements GameService {
 		String win = "";
 		String resultImgUrl = "";
 		
+		for (TeamStatsDto teamStat : match.getTeams()) {
+			if (game.getTeamId() == teamStat.getTeamId()) {
+				if (teamStat.getWin().equals("Win")) {
+					win = "승리";
+					resultImgUrl = victoryImg;
+				} else {
+					win = "패배";
+					resultImgUrl = defeatImg;
+				}
+			}
+		}
+		
 		for (ParticipantIdentityDto participantIdentity : match.getParticipantIdentities()) {
-			if (summoner.getId() == participantIdentity.getPlayer().getSummonerId()) {
+			if ((participantIdentity.getPlayer() != null) && (summoner.getId() == participantIdentity.getPlayer().getSummonerId())) {
 				participantId = participantIdentity.getParticipantId();
 			}
 		}
@@ -189,21 +208,20 @@ public class GameServiceImpl implements GameService {
 			}
 			
 			if (participant.getParticipantId() == participantId) {
-				win = participant.getStats().isWin() ? "승리" : "패배";
-				resultImgUrl = participant.getStats().isWin() ? victoryImg : defeatImg;
 				player = participant;
-
-				
 			}
 			
 		}
 		
 		String title = summoner.getName() + "님이 " + win  + "하셨습니다.\\r";
 		String subTitle = "";
-		if (player.getTeamId() == 100) {
-			subTitle = createSubtitle(player, team1);
-		} else {
-			subTitle = createSubtitle(player, team2);
+		
+		if (player != null) {
+			if (player.getTeamId() == 100) {
+				subTitle = createSubtitle(player, team1);
+			} else {
+				subTitle = createSubtitle(player, team2);
+			}
 		}
 		
 		for (Target target : targets) {
@@ -211,7 +229,7 @@ public class GameServiceImpl implements GameService {
 			User user = userService.getUser(target.getUserNo());
 
 			if (user != null) {
-				lolService.sendFbMessageWithTemplateButton(user.getTel(),resultImgUrl,title,subTitle);
+				lolService.sendFbMessageWithTemplate(user.getTel(),resultImgUrl,title,subTitle);
 				send = true;
 			}
 			
