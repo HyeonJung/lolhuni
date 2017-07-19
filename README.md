@@ -11,6 +11,10 @@
 
 ![](./assets/erd.png)
 
+## System Flow
+
+![](./assets/systemFlow.png)
+
 ## Getting Started
 
 1. git clone 'https://github.com/HyeonJung/lolhuni'
