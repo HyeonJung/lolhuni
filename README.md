@@ -7,6 +7,10 @@
 - DB : MariaDB 10.1
 - 페이스북 페이지
 
+## ERD
+
+![](./assets/erd.png)
+
 ## Getting Started
 
 1. git clone 'https://github.com/HyeonJung/lolhuni'
