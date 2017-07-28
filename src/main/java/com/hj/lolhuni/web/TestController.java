@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hj.lolhuni.model.Champion;
@@ -69,9 +70,13 @@ public class TestController {
 	@ApiOperation("페이스북 메시지 테스트")
 	@RequestMapping(value = "fbMessage", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> sendFbMessage(@RequestBody String message) {
+	public ResponseEntity<?> sendFbMessage(@RequestBody String message, @RequestParam String phoneNumber) {
 		
-		lolService.sendFbMessage("[페이스북 메시지 테스트용]" + message, "+82(010)2517-1592");
+		if (phoneNumber == null || phoneNumber.length() != 11) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		
+		lolService.sendFbMessage("[페이스북 메시지 테스트용]" + message, convertTel(phoneNumber));
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 		
@@ -105,7 +110,9 @@ public class TestController {
 		
 	}
 	
-	
+	public String convertTel(String tel) {
+		return "+82(" + tel.substring(0,3) + ")" + tel.substring(3,7) + "-" + tel.substring(7);
+	}
 	
 
 }
