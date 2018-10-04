@@ -7,7 +7,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.TableGenerator;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 @Entity
+@Getter
+@Setter
+@ToString
 public class ApiKey {
 	
 
@@ -22,34 +29,4 @@ public class ApiKey {
 	@Column
 	private String keyValue;
 
-	public int getKeyNo() {
-		return keyNo;
-	}
-
-	public void setKeyNo(int keyNo) {
-		this.keyNo = keyNo;
-	}
-
-	public String getKeyName() {
-		return keyName;
-	}
-
-	public void setKeyName(String keyName) {
-		this.keyName = keyName;
-	}
-
-	public String getKeyValue() {
-		return keyValue;
-	}
-
-	public void setKeyValue(String keyValue) {
-		this.keyValue = keyValue;
-	}
-
-	@Override
-	public String toString() {
-		return "ApiKey [keyNo=" + keyNo + ", keyName=" + keyName + ", keyValue=" + keyValue + "]";
-	}
-	
-	
 }

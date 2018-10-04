@@ -1,19 +1,12 @@
 package com.hj.lolhuni.model.fb;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@ToString
+@Getter
+@Setter
 public class Message {
 	private String text;
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
-	@Override
-	public String toString() {
-		return "Message [text=" + text + "]";
-	}
-		
 }

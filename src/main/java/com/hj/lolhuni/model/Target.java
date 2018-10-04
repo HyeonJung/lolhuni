@@ -5,6 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 @Entity
 @IdClass(TargetPk.class)
 public class Target {
@@ -17,29 +24,4 @@ public class Target {
 	@Column
 	private int userNo;
 
-	public long getSummonerId() {
-		return summonerId;
-	}
-
-	public void setSummonerId(long summonerId) {
-		this.summonerId = summonerId;
-	}
-
-	public int getUserNo() {
-		return userNo;
-	}
-
-	public void setUserNo(int userNo) {
-		this.userNo = userNo;
-	}
-
-	@Override
-	public String toString() {
-		return "Target [summonerId=" + summonerId + ", userNo=" + userNo + "]";
-	}
-	
-	
-
-	
-	
 }
